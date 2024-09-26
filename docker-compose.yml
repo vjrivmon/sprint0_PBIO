@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: sprint0_mdb
+    environment:
+      - MARIADB_ROOT_PASSWORD=1234
+      - MARIADB_DATABASE=ejemploBBDD  # Crea automáticamente la base de datos
+    ports:
+      - "3306:3306"
+    networks:
+      - redsprint0
+    volumes:
+      - ./mariadb/sql:/docker-entrypoint-initdb.d  # Monta la carpeta sql
+    
+    # Verificación de salud del contenedor
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      retries: 10
+
+  node:
+    build: ./nodejs
+    container_name: sprint0_njs
+    ports:
+      - "8080:8080"
+    networks:
+      - redsprint0
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+networks:
+  redsprint0:
+    driver: bridge
