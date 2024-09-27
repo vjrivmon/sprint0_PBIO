@@ -1,5 +1,5 @@
 # Usamos la imagen oficial de Node.js
-FROM node:latest
+FROM node:18
 
 # Crear el directorio de la app
 WORKDIR /home/nodejs

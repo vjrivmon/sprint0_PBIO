@@ -3,7 +3,7 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const mariadb = require('mariadb');  // Importar mariadb
 const app = express();
-const port = 3000;
+const port = 8080;
 
 // Middleware para procesar JSON
 app.use(express.json());
@@ -149,7 +149,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:3000'
+        url: 'http://localhost:8080'
       }
     ]
   },
