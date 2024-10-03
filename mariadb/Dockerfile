@@ -4,5 +4,7 @@ FROM mariadb:latest
 # Definir la variable de entorno para la contraseña de root de MariaDB
 ENV MARIADB_ROOT_PASSWORD=1234
 
-# Copiar los archivos SQL para inicializar la base de datos
+# Copiame el fichero .sql (que crea la base de datos con la tabla de prueba) dentro del contenedor
+# Si lo ponemos en esye directorio, ejecutará el script
+# la primera vez que se arranque el contenedor a partir de esta imagen
 COPY ./sql/*.sql /docker-entrypoint-initdb.d/

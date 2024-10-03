@@ -1,6 +1,35 @@
 version: '3.8'
-
 services:
+  node:
+    container_name: sprint0_njs
+    build: 
+      context: ./nodejs
+      dockerfile: Dockerfile
+    tty: true
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mariadb
+    command: bash -c "while !</dev/tcp/mariadb/3306; do sleep 1; done; node servidorREST.js"
+  mariadb:
+    container_name: sprint0_mdb
+    restart: always
+    build:
+      context: ./mariadb
+      dockerfile: Dockerfile
+    environment:
+      - MARIADB_ROOT_PASSWORD=1234
+      - MARIADB_DATABASE=ejemploBBDD  # Crea automáticamente la base de datos
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mariadb/sql:/docker-entrypoint-initdb.d  # Monta la carpeta sql
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
+    driver: local
+
 #
 # server:
 #    build:
@@ -14,31 +43,4 @@ services:
 #      - ./server.env
 #    depends_on:
 #      - mariadb
-#      
-  mariadb:
-    image: mariadb:latest
-    container_name: sprint0_mdb
-    restart: always
-    environment:
-      - MARIADB_ROOT_PASSWORD=1234
-      - MARIADB_DATABASE=ejemploBBDD  # Crea automáticamente la base de datos
-    ports:
-      - "3306:3306"
-    volumes:
-      - ./mariadb/sql:/docker-entrypoint-initdb.d  # Monta la carpeta sql
-      - db_data:/var/lib/mysql
-    
-
-  node:
-    build: ./nodejs
-    container_name: sprint0_njs
-    ports:
-      - "8080:8080"
-    depends_on:
-      - mariadb
-    command: bash -c "while !</dev/tcp/mariadb/3306; do sleep 1; done; node servidorREST.js"
-
-
-volumes:
-  db_data:
-    driver: local
+#     
