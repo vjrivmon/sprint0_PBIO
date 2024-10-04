@@ -50,7 +50,6 @@ const pool = mariadb.createPool({
  *           type: number
  *           description: Valor de la medición de Temperatura
  *       example:
- *         id: 1
  *         hora: '10:00'
  *         lugar: 'Madrid'
  *         id_sensor: 101
@@ -120,15 +119,15 @@ app.post('/mediciones', async (req, res) => {
   let connection;
   try {
     connection = await pool.getConnection();
-    const query = 'INSERT INTO mediciones (id, hora, lugar, id_sensor, valorGas, valorTemperatura) VALUES (?, ?, ?, ?, ?, ?)';
-    await connection.query(query, [
-      nuevaMedicion.id, 
+    const query = 'INSERT INTO mediciones (hora, lugar, id_sensor, valorGas, valorTemperatura) VALUES (?, ?, ?, ?, ?)';
+    const result = await connection.query(query, [
       nuevaMedicion.hora, 
       nuevaMedicion.lugar, 
       nuevaMedicion.id_sensor, 
       nuevaMedicion.valorGas, 
       nuevaMedicion.valorTemperatura
     ]);
+    nuevaMedicion.id = result.insertId; // Asigna el ID generado automáticamente
     res.status(201).json(nuevaMedicion);
   } catch (err) {
     console.error('Error: ', err);
