@@ -161,7 +161,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Servidor corriendo
 app.listen(port, () => {
-  console.log(`API REST corriendo en http://localhost:${port}`);
+  console.log(`API REST corriendo en http://localhost:${port}/api-docs/`);
 });
 
 /*
